@@ -53,7 +53,7 @@ export class LoginComponent implements OnInit {
     );
   }
 
-  login(): Promise<any> {
+  login() {
     if (this.form.valid) {
       this.loading = true;
       this.auth.login(this.form.value.userName, this.form.value.password);
