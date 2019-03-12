@@ -1,0 +1,20 @@
+<mat-card>
+
+  <mat-toolbar>
+
+    <button mat-mini-fab color="primary" (click)="goBack()">
+      <mat-icon>navigate_before</mat-icon>
+    </button>
+
+      <span>Stream {{streamId}}</span>
+
+      <button mat-fab (click)="addStructures()" mat-tooltip="Aggiungi una struttura" tooltip-position="below">
+        <mat-icon>add</mat-icon>
+      </button>
+    </mat-toolbar>
+
+  <div class="editor-view" >   <!-- *ngFor="let data of dataB;let i = index" -->
+      <json-editor [options]="editorOptions" [data]="data" ></json-editor>
+  </div>
+
+</mat-card>

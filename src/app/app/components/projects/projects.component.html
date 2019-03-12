@@ -1,0 +1,116 @@
+<div fxLayout="row" fxLayout.xs="column">
+  <mat-card fxFlex="50%;" fxFlex.xs="100%">
+
+    <!-- TITLE IN TOOLBAR -->
+    <mat-toolbar>
+      <span>Progetti</span>
+
+      <span class="filler"></span>
+      <span>
+        <button mat-icon-button (click)="openAddProject()" mat-tooltip="Aggiungi un progetto" tooltip-position="below">
+          <mat-icon>add</mat-icon>
+        </button>
+      </span>
+
+    </mat-toolbar>
+
+    <!-- SPINNER -->
+    <mat-progress-bar mode="indeterminate" *ngIf="loadingProjects"></mat-progress-bar>
+
+
+
+    <div *ngIf="!loadingProjects">
+      <mat-card class="project-card" *ngFor="let project of projects" [class.selected]="project.id == selectedProject.id"
+        (click)="onSelect(project)">
+
+        <mat-card-header>
+          <mat-card-title>{{project.name}}</mat-card-title>
+          <mat-card-subtitle>{{project.createdAt| date:'shortDate'}}</mat-card-subtitle>
+        </mat-card-header>
+
+        <mat-card-content>
+
+          {{project.description}}
+
+        </mat-card-content>
+
+
+        <div>
+          <mat-card-actions>
+            <!-- <div class="button-row"> -->
+            <button mat-button color="primary" (click)="openEditProject(project)">
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button mat-button color="accent" (click)="deleteProject(project)">
+              <mat-icon>delete</mat-icon>
+            </button>
+            <!--  </div> -->
+          </mat-card-actions>
+        </div>
+
+      </mat-card>
+
+    </div>
+
+  </mat-card>
+
+  <mat-card fxFlex="50%;" fxFlex.xs="100%">
+
+
+    <!-- TITLE IN TOOLBAR -->
+    <mat-toolbar>
+      <span>Streams</span>
+      <span class="filler"></span>
+      <span>
+        <button mat-icon-button (click)="openAddStream()" mat-tooltip="Aggiungi uno stream al progetto selezionato"
+          tooltip-position="below">
+          <mat-icon>add</mat-icon>
+        </button>
+      </span>
+    </mat-toolbar>
+
+    <!-- SPINNER -->
+    <mat-progress-bar mode="indeterminate" *ngIf="loadingStreams"></mat-progress-bar>
+
+    <mat-card-content *ngIf="!loading">
+      <div class="table-container mat-elevation-z8">
+        <mat-table #table [dataSource]="streams">
+
+          <!-- Name Column -->
+          <ng-container matColumnDef="name">
+            <mat-header-cell *matHeaderCellDef> Name </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.name}} </mat-cell>
+          </ng-container>
+
+          <!-- Weight Column -->
+          <ng-container matColumnDef="structures">
+            <mat-header-cell *matHeaderCellDef> structures </mat-header-cell>
+            <mat-cell *matCellDef="let element">
+              <mat-chip-list>
+                <mat-chip *ngFor="let structure of element.structures">{{structure.name}}</mat-chip>
+              </mat-chip-list>
+            </mat-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="actions">
+            <mat-header-cell *matHeaderCellDef> actions </mat-header-cell>
+            <mat-cell *matCellDef="let element" class="btn-cell">
+              <button mat-mini-fab color="primary" (click)="editStream(element)">
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button mat-mini-fab color="warn" (click)="deleteStream(element)">
+                <mat-icon>delete</mat-icon>
+              </button>
+              <button mat-mini-fab color="accent" (click)="goToStream(element)">
+                <mat-icon>navigate_next</mat-icon>
+              </button>
+            </mat-cell>
+          </ng-container>
+
+          <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+          <mat-row *matRowDef="let row; columns: displayedColumns;" (click)="onRowClicked(row)"></mat-row>
+        </mat-table>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

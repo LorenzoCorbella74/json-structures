@@ -1,10 +1,15 @@
-import { Component } from '@angular/core';
+import { Component } from "@angular/core";
+import { AuthenticateService } from "./app/services/authenticate.service";
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  selector: "app-root",
+  templateUrl: "./app.component.html",
+  styleUrls: ["./app.component.scss"]
 })
 export class AppComponent {
-  title = 'json-structures';
+  constructor(public a: AuthenticateService) {}
+
+  logout() {
+    this.a.logout();
+  }
 }

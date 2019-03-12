@@ -1,0 +1,30 @@
+<form #form="ngForm">
+
+    <h2 mat-dialog-title color="primary" *ngIf="!editMode">Aggiungi un progetto</h2>
+    <h2 mat-dialog-title color="primary" *ngIf="editMode">Edita il progetto</h2>
+
+    <mat-dialog-content>
+      <div class="form-container">
+        <mat-form-field>
+          <input matInput placeholder="Nome" [(ngModel)]="project.name" name="name">
+        </mat-form-field>
+
+        <mat-form-field>
+          <textarea matInput placeholder="Descrizione" style="height:80px" [(ngModel)]="project.description" name="description"></textarea>
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-select placeholder="Categoria" [(ngModel)]="project.category" name="category">
+            <mat-option value="option">Personale</mat-option>
+            <mat-option value="option">Lavoro</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </mat-dialog-content>
+
+    <mat-dialog-actions>
+      <button mat-button (click)="onCloseCancel()">Cancella</button>
+      <button mat-raised-button color="accent" [disabled]="!form.valid" (click)="onCloseConfirm(form)">Aggiungi</button> <!-- cdkFocusInitial -->
+    </mat-dialog-actions>
+
+</form>
