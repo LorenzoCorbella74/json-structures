@@ -7,7 +7,9 @@ import { AuthenticateService } from "./app/services/authenticate.service";
   styleUrls: ["./app.component.scss"]
 })
 export class AppComponent {
-  constructor(public a: AuthenticateService) {}
+  constructor(public a: AuthenticateService) {
+
+  }
 
   logout() {
     this.a.logout();

@@ -30,6 +30,8 @@ import { AngularFireModule } from "@angular/fire";
 import { AngularFireDatabaseModule } from "@angular/fire/database";
 import { environment } from "../environments/environment";
 import { AngularFireAuth } from "@angular/fire/auth";
+import { FirebaseService } from './app/services/firebase.service';
+import { AngularFirestore } from '@angular/fire/firestore';
 
 export function createStorage() {
   return new LocalStorageService("str", "sessionStorage");
@@ -62,10 +64,12 @@ export function createStorage() {
   entryComponents: [AddDialogueComponent, StreamDialogueComponent],
   exports: [],
   providers: [
+    FirebaseService,
+    AngularFirestore,
     { provide: LocalStorageService, useFactory: createStorage },
     AuthenticateService,
     AngularFireAuth,
-    CanActivateRouteGuard
+    CanActivateRouteGuard,
   ],
   bootstrap: [AppComponent]
 })

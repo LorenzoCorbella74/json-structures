@@ -4,6 +4,8 @@ import { MatDialog, MatTable, MatTableDataSource } from '@angular/material';
 import { AddDialogueComponent } from '../add-dialogue/add-dialogue.component';
 import { Router } from '@angular/router';
 import { StreamDialogueComponent } from '../stream-dialogue/stream-dialogue.component';
+import { AuthenticateService } from '../../services/authenticate.service';
+import { FirebaseService } from '../../services/firebase.service';
 
 
 @Component({
@@ -13,7 +15,8 @@ import { StreamDialogueComponent } from '../stream-dialogue/stream-dialogue.comp
 })
 export class ProjectsComponent implements OnInit {
 
-  projects: any[];
+  user: any;
+  projects: any;
   selectedProject: any = {};
   streams: any;
   displayedColumns = ['name', 'structures', 'actions'];
@@ -25,7 +28,9 @@ export class ProjectsComponent implements OnInit {
   constructor(
     public dialog: MatDialog,
     private router: Router,
-    private mem: LocalStorageService
+    private mem: LocalStorageService,
+    public auth: AuthenticateService,
+    public firebase: FirebaseService
   ) {
 
     this.streams = new MatTableDataSource<any>([]);
@@ -33,26 +38,17 @@ export class ProjectsComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.loadProjects(1); //carica i progetti dell'utente 1
+    this.user = this.mem.get("user");
+    if (this.user) {
+      this.loadProjects(this.user.uid);         // carica i progetti dell'utente
+    }
   }
 
-
-  loadProjects(userId: number) {
-    this.loadingProjects = true;
-    setTimeout(() => {
-      this.loadingProjects = false;
-      this.projects = [
-        { id: '1', name: 'Esempio 1', description: 'bla bla...', category: 'Personale', createdAt: '', streams: [] },
-        { id: '2', name: 'Esempio 2', description: 'bla bla...', category: 'Lavoro', createdAt: '', streams: [] },
-        { id: '3', name: 'Esempio 3', description: 'bla bla...', category: 'Personale', createdAt: '', streams: [] },
-        { id: '4', name: 'Esempio 4', description: 'bla bla...', category: 'Lavoro', createdAt: '', streams: [] },
-      ];
-      const sel = this.mem.get('selectedProject');
-      if (sel) {
-        this.selectedProject = sel;
-        this.loadStreams(this.selectedProject.id);
-      }
-    }, 500);
+  loadProjects(userId: string) {
+    this.firebase.getprojectsList().subscribe(data => {
+      console.log(data)
+      this.projects = data
+    });
   }
 
   loadStreams(id: number) {
@@ -107,7 +103,11 @@ export class ProjectsComponent implements OnInit {
   }
 
   deleteProject(proj: any) {
-    this.projects = this.projects.filter(e => e.id !== proj.id);
+    this.firebase.delateProject(proj.id).then(data => {
+      this.projects = this.projects.filter(e => e.id !== proj.id);
+    })
+    .catch(error => console.log(error))
+
   }
 
   openAddProject() {
@@ -118,8 +118,13 @@ export class ProjectsComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
+        delete result.createdAt;
         console.log('Dialog result: ', result);
-        this.projects.push(Object.assign({id:6}, result));
+        this.firebase.createProject(result)
+          .then(data => {
+            this.projects.push(data);
+          })
+          .catch(error => console.log(error))
       }
     });
   }
@@ -163,6 +168,6 @@ export class ProjectsComponent implements OnInit {
 
   onRowClicked(row) {
     console.log('Row clicked: ', row);
-}
+  }
 
 }

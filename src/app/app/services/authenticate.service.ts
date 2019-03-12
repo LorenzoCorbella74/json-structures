@@ -10,19 +10,20 @@ import { User } from "firebase";
   providedIn: "root"
 })
 export class AuthenticateService {
+
   user: User;
 
   constructor(
     private router: Router,
     private mem: LocalStorageService,
-    private firebaseAuth: AngularFireAuth
-  ) {
+    private firebaseAuth: AngularFireAuth) {
+
     this.firebaseAuth.authState.subscribe(user => {
       if (user) {
         this.user = user;
-        localStorage.setItem("user", JSON.stringify(this.user));
+        this.mem.set("user", this.user);
       } else {
-        localStorage.setItem("user", null);
+        this.mem.set("user", null);
       }
     });
   }
@@ -43,8 +44,8 @@ export class AuthenticateService {
     this.firebaseAuth.auth
       .signInWithEmailAndPassword(email, password)
       .then(value => {
-        console.log("Nice, it worked!");
-        localStorage.setItem("user", JSON.stringify(value));
+        console.log("User logged");
+        this.mem.set("user", value);
         this.router.navigate(["/projects"]);
         return value;
       })
@@ -54,13 +55,13 @@ export class AuthenticateService {
   }
 
   logout() {
-    localStorage.removeItem("user");
+    this.mem.clear("user");
     this.firebaseAuth.auth.signOut();
     this.router.navigate(["/login"]);
   }
 
   isLoggedIn() {
-    const user = localStorage.getItem("user");
+    const user = this.mem.get("user");
     return user ? true : false;
   }
 }
