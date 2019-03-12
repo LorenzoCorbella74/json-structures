@@ -1,3 +1,10 @@
+:host ::ng-deep json-editor,
+:host ::ng-deep json-editor .jsoneditor,
+:host ::ng-deep json-editor > div,
+:host ::ng-deep json-editor jsoneditor-outer {
+  height: 540px;
+}
+
 mat-view.mat-view {
   min-height: 640px;
   overflow-x: scroll;
@@ -8,8 +15,4 @@ mat-view.mat-view {
   margin: 1%;
   min-height: 100%;
   min-width: 480px;
-}
-
-json-editor>div>div>div.jsoneditor-outer.has-nav-bar {
-  min-height: 100%;
 }

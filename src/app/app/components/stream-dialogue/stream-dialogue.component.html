@@ -1,12 +1,12 @@
 <form #form="ngForm">
 
-  <h2 mat-dialog-title color="primary" *ngIf="!editMode">Aggiungi lo stream</h2>
-  <h2 mat-dialog-title color="primary" *ngIf="editMode">Edita lo stream</h2>
+  <h2 mat-dialog-title color="primary" *ngIf="!editMode">Aggiungi uno stream</h2>
+  <h2 mat-dialog-title color="primary" *ngIf="editMode">Edita stream</h2>
 
   <mat-dialog-content>
     <div class="form-container">
       <mat-form-field>
-        <input matInput placeholder="Nome" [(ngModel)]="stream.name" name="name">
+        <input matInput placeholder="Nome" [(ngModel)]="stream.name" name="name" required>
       </mat-form-field>
 
       <mat-form-field>
@@ -18,7 +18,9 @@
 
   <mat-dialog-actions>
     <button mat-button (click)="onCloseCancel()">Cancella</button>
-    <button mat-raised-button color="accent" [disabled]="!form.valid" (click)="onCloseConfirm(form)">Aggiungi</button> <!-- cdkFocusInitial -->
+    <button mat-raised-button color="accent" [disabled]="!form.valid" (click)="onCloseConfirm(form)">
+        {{!editMode?'Aggiungi':'Salva modifiche'}}
+    </button> <!-- cdkFocusInitial -->
   </mat-dialog-actions>
 
 </form>

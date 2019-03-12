@@ -54,7 +54,6 @@ export class FirebaseService {
     console.log(error)
   } */
 
-
 import { AngularFirestore } from '@angular/fire/firestore';
 import { Injectable } from '@angular/core';
 
@@ -62,11 +61,7 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class FirebaseService {
-
-  constructor(
-    private firestore: AngularFirestore
-  ) { }
-
+  constructor(private firestore: AngularFirestore) {}
 
   createProject(project) {
     return this.firestore.collection('projects').add(project);
@@ -76,11 +71,11 @@ export class FirebaseService {
     return this.firestore.collection('projects').snapshotChanges();
   }
 
-  update_Student(recordID,record){
-    this.firestore.doc('projects/' + recordID).update(record);
+  updateProject(projectId, project): any {
+    return this.firestore.doc('projects/' + projectId).update(project);
   }
 
-  delateProject(record_id): Promise<any> {
-    this.firestore.doc('projects/' + record_id).delete();
+  delateProject(projectId): any {
+    return this.firestore.doc('projects/' + projectId).delete();
   }
 }

@@ -1,4 +1,4 @@
-<div class="signin-content">
+<div class="signin-content magic-gradient">
   <mat-card>
     <mat-card-header>
       <mat-card-title>Login</mat-card-title>
@@ -8,12 +8,12 @@
         <mat-form-field class="full-width-input">
           <input
             matInput
-            placeholder="User"
+            placeholder="Email"
             formControlName="userName"
             required
           />
           <mat-error *ngIf="isFieldInvalid('userName')">
-            Please inform your user name
+            Please enter your email address
           </mat-error>
         </mat-form-field>
         <mat-form-field class="full-width-input">

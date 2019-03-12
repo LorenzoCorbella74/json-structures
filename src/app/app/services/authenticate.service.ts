@@ -10,14 +10,13 @@ import { User } from "firebase";
   providedIn: "root"
 })
 export class AuthenticateService {
-
   user: User;
 
   constructor(
     private router: Router,
     private mem: LocalStorageService,
-    private firebaseAuth: AngularFireAuth) {
-
+    private firebaseAuth: AngularFireAuth
+  ) {
     this.firebaseAuth.authState.subscribe(user => {
       if (user) {
         this.user = user;
@@ -62,6 +61,6 @@ export class AuthenticateService {
 
   isLoggedIn() {
     const user = this.mem.get("user");
-    return user ? true : false;
+    return user.uid ? true : false;
   }
 }

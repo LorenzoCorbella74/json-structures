@@ -15,8 +15,8 @@
 
         <mat-form-field>
           <mat-select placeholder="Categoria" [(ngModel)]="project.category" name="category">
-            <mat-option value="option">Personale</mat-option>
-            <mat-option value="option">Lavoro</mat-option>
+            <mat-option value="personale">Personale</mat-option>
+            <mat-option value="lavoro">Lavoro</mat-option>
           </mat-select>
         </mat-form-field>
       </div>
@@ -24,7 +24,9 @@
 
     <mat-dialog-actions>
       <button mat-button (click)="onCloseCancel()">Cancella</button>
-      <button mat-raised-button color="accent" [disabled]="!form.valid" (click)="onCloseConfirm(form)">Aggiungi</button> <!-- cdkFocusInitial -->
+      <button mat-raised-button color="accent" [disabled]="!form.valid" (click)="onCloseConfirm(form)">
+        {{!editMode?'Aggiungi':'Salva modifiche'}}
+      </button> <!-- cdkFocusInitial -->
     </mat-dialog-actions>
 
 </form>

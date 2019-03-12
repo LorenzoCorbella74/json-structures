@@ -3,6 +3,8 @@ import { ActivatedRoute } from "@angular/router";
 import { Location } from "@angular/common";
 import { JsonEditorComponent, JsonEditorOptions } from "ang-jsoneditor";
 
+// SOURCE: https://github.com/mariohmol/ang-jsoneditor
+
 @Component({
   selector: "app-structures",
   templateUrl: "./structures.component.html",

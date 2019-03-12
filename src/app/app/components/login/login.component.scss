@@ -3,9 +3,23 @@ mat-card {
   margin: 2em auto;
   text-align: center;
 }
+
 .signin-content {
   padding: 60px 1rem;
 }
+
 .full-width-input {
   width: 100%;
+}
+
+.magic-gradient {
+  background: #654ea3;
+  /* fallback for old browsers */
+  background: -webkit-linear-gradient(to right, #eaafc8, #654ea3);
+  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to right, #eaafc8, #654ea3);
+  /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  /* height:100vh; */
+  flex: 1 1 100%;
+  min-height: 100vh;
 }

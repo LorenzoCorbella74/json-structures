@@ -23,7 +23,6 @@ export class ProjectsComponent implements OnInit {
   @ViewChild('table') table: MatTable<any>;
 
   loadingProjects = false;
-  loadingStreams = false;
 
   constructor(
     public dialog: MatDialog,
@@ -34,7 +33,6 @@ export class ProjectsComponent implements OnInit {
   ) {
 
     this.streams = new MatTableDataSource<any>([]);
-
   }
 
   ngOnInit() {
@@ -46,46 +44,30 @@ export class ProjectsComponent implements OnInit {
 
   loadProjects(userId: string) {
     this.firebase.getprojectsList().subscribe(data => {
-      console.log(data)
-      this.projects = data
+      this.projects = data.map(e => {
+        if (e.payload.doc.data()['userId'] === this.user.uid) {
+          return {
+            id: e.payload.doc.id,
+            userId: e.payload.doc.data()['userId'],
+            name: e.payload.doc.data()['name'],
+            description: e.payload.doc.data()['description'],
+            category: e.payload.doc.data()['category'],
+            streams: e.payload.doc.data()['streams']
+          };
+        }
+      });
     });
   }
 
   loadStreams(id: number) {
-    this.loadingStreams = true;
-    this.streams = [];
-    // MOCK DATA
-    setTimeout(() => {
-      this.loadingStreams = false;
-      this.streams = [
-        {
-          id: 1, name: 'customerManagement', structures: [
-            { id: 1, name: 'read' },
-            { id: 2, name: 'ibans' },
-            { id: 3, name: 'yourdesire' },
-            { id: 4, name: 'myfortune' }
-          ], createdAt: ''
-        },
-        {
-          id: 2, name: 'customerProducts', structures: [
-            { id: 6, name: 'readMe' },
-            { id: 7, name: 'profiles' }
-          ], createdAt: ''
-        },
-        {
-          id: 3, name: 'FiscalCode', structures: [
-            { id: 8, name: 'YoyrProfile' },
-            { id: 9, name: 'myProfiles' }
-          ], createdAt: ''
-        },
-        { id: 4, name: 'nationalities', structures: [], createdAt: '' }
-      ];
-    }, 500);
+    this.streams = this.selectedProject.streams;
   }
 
   onSelect(project: any): void {
     this.selectedProject = project;
-    this.mem.set('selectedProject', project);
+    if (!this.selectedProject.streams) {
+      this.selectedProject.streams = [];
+    }
     this.loadStreams(project.id); // si caricano gli stream del progetto
   }
 
@@ -95,19 +77,24 @@ export class ProjectsComponent implements OnInit {
       width: '600px',
       data: obj
     });
-
     dialogRef.afterClosed().subscribe(result => {
-      console.log(`Dialog result: ${result}`);
-      obj = result;
+      if (result) {
+        console.log('Modale edita: ', { result });     // `Modale edita: ${result}`
+        this.firebase.updateProject(obj.id, result)
+          .then(data => {
+            obj = result;
+          })
+          .catch(error => console.log('Impossibile aggiornare un progetto: ', error));
+      }
     });
   }
 
   deleteProject(proj: any) {
-    this.firebase.delateProject(proj.id).then(data => {
-      this.projects = this.projects.filter(e => e.id !== proj.id);
-    })
-    .catch(error => console.log(error))
-
+    this.firebase.delateProject(proj.id)
+      .then(data => {
+        this.projects = this.projects.filter(e => e.id !== proj.id);
+      })
+      .catch(error => console.log('Impossibile cancellare un progetto: ', error));
   }
 
   openAddProject() {
@@ -115,16 +102,16 @@ export class ProjectsComponent implements OnInit {
       height: '480px',
       width: '640px',
     });
-
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         delete result.createdAt;
-        console.log('Dialog result: ', result);
+        result = Object.assign(result, { userId: this.user.uid, streams: [] });
+        console.log('Modale aggiungi: ', result);
         this.firebase.createProject(result)
           .then(data => {
             this.projects.push(data);
           })
-          .catch(error => console.log(error))
+          .catch(error => console.log('Impossibile creare un progetto: ', error));
       }
     });
   }
@@ -134,15 +121,18 @@ export class ProjectsComponent implements OnInit {
       height: '480px',
       width: '640px',
     });
-
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        console.log('Dialog result: ', result);
-        this.streams.push(result);
-        this.table.renderRows();
+        delete result.createdAt;
+        console.log('Dialog add stream: ', result);
+        this.selectedProject.streams.push(result);
+        this.firebase.updateProject(this.selectedProject.id, this.selectedProject)
+          .then(data => {
+            this.table.renderRows();
+          })
+          .catch(error => console.log('Impossibile aggiornare un progetto: ', error));
       }
     });
-
   }
 
   editStream(stream: any) {
@@ -151,19 +141,35 @@ export class ProjectsComponent implements OnInit {
       width: '640px',
       data: stream
     });
-
     dialogRef.afterClosed().subscribe(result => {
-      console.log(`Dialog result: ${result}`);
-      stream = result;
+      if (result) {
+        console.log('Dialog add stream: ', result);
+        const theOne = this.selectedProject.streams.find(e => result.name === e.name);
+        this.selectedProject.streams[theOne] = result;
+        this.firebase.updateProject(this.selectedProject.id, this.selectedProject)
+          .then(data => {
+            this.table.renderRows();
+          })
+          .catch(error => console.log('Impossibile aggiornare un progetto: ', error));
+      }
     });
   }
 
   deleteStream(stream: any) {
-    this.streams = this.streams.filter(e => e.id !== stream.id);
+    const theOne = this.selectedProject.streams.find(e => stream.name === e.name);
+    this.selectedProject.streams.splice(theOne, 1);
+    this.firebase.updateProject(this.selectedProject.id, this.selectedProject)
+      .then(data => {
+        this.table.renderRows();
+      })
+      .catch(error => console.log('Impossibile aggiornare un progetto: ', error));
   }
 
   goToStream(stream: any) {
-    this.router.navigate(['/structures', stream.id]);
+    if (!stream.data) {
+      stream.data = '';
+    }
+    this.router.navigate(['/structures', stream.name]);
   }
 
   onRowClicked(row) {
