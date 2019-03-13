@@ -73,8 +73,8 @@ export class FirebaseService {
     return this.firestore.collection('projects').snapshotChanges();
   }
 
-  getProject(projectId):any {
-    return this.firestore.doc('projects/' + projectId).get()
+  getProject(projectId): any {
+    return this.firestore.doc('projects/' + projectId).get();
   }
 
   updateProject(projectId, project): any {
@@ -99,12 +99,16 @@ export class FirebaseService {
     return this.firestore.collection('jsons').snapshotChanges();
   }
 
-  updateJson(json): any {
+  updateJson(id,json): any {
     return this.firestore.doc('jsons/' + json.id).update(json);
   }
 
   delateJson(json): any {
     return this.firestore.doc('jsons/' + json.id).delete();
+  }
+
+  getJson(jsonId): any {
+    return this.firestore.doc('jsons/' + jsonId).get();
   }
 
 }

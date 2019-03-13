@@ -1,13 +1,11 @@
-import { Injectable } from "@angular/core";
-import { Router } from "@angular/router";
-import { LocalStorageService } from "./locastorage.service";
-
-import { auth } from "firebase/app";
-import { AngularFireAuth } from "@angular/fire/auth";
-import { User } from "firebase";
+import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
+import { LocalStorageService } from './locastorage.service';
+import { AngularFireAuth } from '@angular/fire/auth';
+import { User } from 'firebase';
 
 @Injectable({
-  providedIn: "root"
+  providedIn: 'root'
 })
 export class AuthenticateService {
   user: User;
@@ -20,9 +18,9 @@ export class AuthenticateService {
     this.firebaseAuth.authState.subscribe(user => {
       if (user) {
         this.user = user;
-        this.mem.set("user", this.user);
+        this.mem.set('user', this.user);
       } else {
-        this.mem.set("user", null);
+        this.mem.set('user', null);
       }
     });
   }
@@ -31,11 +29,11 @@ export class AuthenticateService {
     this.firebaseAuth.auth
       .createUserWithEmailAndPassword(email, password)
       .then(value => {
-        console.log("Utente: ", value);
+        console.log('Utente: ', value);
         return value;
       })
       .catch(err => {
-        console.log("Something went wrong:", err.message);
+        console.log('Something went wrong in signup:', err.message);
       });
   }
 
@@ -43,24 +41,24 @@ export class AuthenticateService {
     this.firebaseAuth.auth
       .signInWithEmailAndPassword(email, password)
       .then(value => {
-        console.log("User logged");
-        this.mem.set("user", value);
-        this.router.navigate(["/projects"]);
+        console.log('User logged in...', value);
+        this.mem.set('user', value);
+        this.router.navigate(['/projects']);
         return value;
       })
       .catch(err => {
-        console.log("Something went wrong:", err.message);
+        console.log('Something went wrong in login:', err.message);
       });
   }
 
   logout() {
-    this.mem.clear("user");
+    this.mem.clear('user');
     this.firebaseAuth.auth.signOut();
-    this.router.navigate(["/login"]);
+    this.router.navigate(['/login']);
   }
 
   isLoggedIn() {
-    const user = this.mem.get("user");
+    const user = this.mem.get('user');
     return user.uid ? true : false;
   }
 }

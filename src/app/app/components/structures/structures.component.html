@@ -9,19 +9,21 @@
 
       <span>Stream: {{streamId}}</span>
       <span class="filler"></span>
-      <span>
+      <!-- <span>
         <button mat-fab (click)="addJsonObject()" mat-tooltip="Aggiungi una struttura" tooltip-position="below">
           <mat-icon>add</mat-icon>
         </button>
-      </span>
+      </span> -->
     </mat-toolbar>
 
   <div class="editor-view">
         <json-editor
         [options]="editorOptions"
-        [data]="data"
+        [data]="jsonObject"
         (change)="getData($event)">
       </json-editor>
   </div>
 
 </mat-card>
+
+<app-spinner [visible]="loading"></app-spinner>

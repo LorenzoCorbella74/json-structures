@@ -41,9 +41,9 @@ export class LoginComponent implements OnInit {
       userName: ["", Validators.required],
       password: ["", Validators.required]
     });
-    /* if (this.auth.isLoggedIn()) {
+    if (this.auth.isLoggedIn()) {
       this.router.navigate(['/projects']);
-    } */
+    }
   }
 
   isFieldInvalid(field: string) {
