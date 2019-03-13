@@ -124,6 +124,7 @@ export class ProjectsComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         delete result.createdAt;
+        result.id = this.selectedProject.id+result.name;
         console.log('Dialog add stream: ', result);
         this.selectedProject.streams.push(result);
         this.firebase.updateProject(this.selectedProject.id, this.selectedProject)
@@ -169,7 +170,7 @@ export class ProjectsComponent implements OnInit {
     if (!stream.data) {
       stream.data = '';
     }
-    this.router.navigate(['/structures', stream.name]);
+    this.router.navigate(['/structures', stream.id]);
   }
 
   onRowClicked(row) {

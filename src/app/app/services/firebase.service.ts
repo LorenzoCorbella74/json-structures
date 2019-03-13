@@ -6,7 +6,7 @@ import { AngularFireList, AngularFireDatabase } from '@angular/fire/database';
 @Injectable()
 export class FirebaseService {
 
-  private basePath: string = '/projects';
+  private basePath: string = '/jsons';
 
   projects: AngularFireList<any> = null; //  list of objects
   project: any = null;                  //   single object
@@ -54,21 +54,27 @@ export class FirebaseService {
     console.log(error)
   } */
 
-import { AngularFirestore } from '@angular/fire/firestore';
+import { AngularFirestoreDocument, AngularFirestore, AngularFirestoreCollection } from '@angular/fire/firestore';
 import { Injectable } from '@angular/core';
 
 @Injectable({
   providedIn: 'root'
 })
 export class FirebaseService {
-  constructor(private firestore: AngularFirestore) {}
 
+  constructor(private firestore: AngularFirestore) { }
+
+  /* -------------------------- Projects -------------------------- */
   createProject(project) {
     return this.firestore.collection('projects').add(project);
   }
 
   getprojectsList() {
     return this.firestore.collection('projects').snapshotChanges();
+  }
+
+  getProject(projectId):any {
+    return this.firestore.doc('projects/' + projectId).get()
   }
 
   updateProject(projectId, project): any {
@@ -78,4 +84,27 @@ export class FirebaseService {
   delateProject(projectId): any {
     return this.firestore.doc('projects/' + projectId).delete();
   }
+
+  /* -------------------------- Streams -------------------------- */
+
+  getJsonObjectsList() {
+    return this.firestore.collection('jsons').snapshotChanges();
+  }
+
+  createJson(json) {
+    return this.firestore.collection('jsons').add(json);
+  }
+
+  getJsons() {
+    return this.firestore.collection('jsons').snapshotChanges();
+  }
+
+  updateJson(json): any {
+    return this.firestore.doc('jsons/' + json.id).update(json);
+  }
+
+  delateJson(json): any {
+    return this.firestore.doc('jsons/' + json.id).delete();
+  }
+
 }
