@@ -19,10 +19,10 @@ export class ProjectsComponent implements OnInit {
   projects: any;
   selectedProject: any = {};
   streams: any;
-  displayedColumns = ['name', 'structures', 'actions'];
+  displayedColumns = ['name', 'description', 'actions'];
   @ViewChild('table') table: MatTable<any>;
 
-  loadingProjects:boolean = false;
+  loadingProjects: boolean = false;
 
   constructor(
     public dialog: MatDialog,
@@ -31,14 +31,17 @@ export class ProjectsComponent implements OnInit {
     public auth: AuthenticateService,
     public firebase: FirebaseService
   ) {
-
     this.streams = new MatTableDataSource<any>([]);
   }
 
   ngOnInit() {
-    this.user = this.mem.get("user");
-    if (this.user) {
+    this.user = this.mem.get('user');
+    this.projects = this.mem.get('projects');
+    this.selectedProject = this.mem.get('selectedProject');
+    if (this.user && !this.projects && !this.selectedProject) {
       this.loadProjects(this.user.uid);         // carica i progetti dell'utente
+    } else {
+      this.loadStreams(this.selectedProject.id);
     }
   }
 
@@ -58,7 +61,9 @@ export class ProjectsComponent implements OnInit {
           };
         }
       });
-    });
+      this.mem.set('projects', this.projects);
+    },
+      error => console.log(error));
   }
 
   loadStreams(id: number) {
@@ -67,6 +72,8 @@ export class ProjectsComponent implements OnInit {
 
   onSelect(project: any): void {
     this.selectedProject = project;
+    this.mem.set('selectedProject', this.selectedProject);
+    // se non esistono ancora l'array degli stream si crea
     if (!this.selectedProject.streams) {
       this.selectedProject.streams = [];
     }

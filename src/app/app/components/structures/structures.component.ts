@@ -20,10 +20,11 @@ export class StructuresComponent implements OnInit {
   projectId: string;
   jsonObject: any = {};
   selectedIndex: number;
+  pageName:string = '';
+  project: any = {};
 
   public editorOptions: JsonEditorOptions;
   public data: any;
-  project: any = {};
 
   loading: boolean = false;
 
@@ -45,7 +46,7 @@ export class StructuresComponent implements OnInit {
     this.editorOptions = new JsonEditorOptions();
     this.editorOptions.modes = ['code', 'text', 'tree', 'view']; // set all allowed modes
     this.editorOptions.mode = 'code';                            // set only one mode
-    console.log(this.editorOptions);
+    // console.log(this.editorOptions);
   }
 
   ngOnInit() {
@@ -70,6 +71,7 @@ export class StructuresComponent implements OnInit {
             this.selectedIndex = this.project.streams.findIndex(e => e.id === this.streamId);
             // se esiste si prende quello ritornato
             const index = this.project.streams[this.selectedIndex].refId;
+            this.pageName = this.project.streams[this.selectedIndex].name;
             if (index) {
               this.loading = true;
               this.firebase.getJson(index)
