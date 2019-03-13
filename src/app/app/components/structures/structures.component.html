@@ -7,21 +7,22 @@
       </button>
     </span>
 
-      <span>Stream: <strong>{{pageName}}</strong></span>
-      <span class="filler"></span>
-      <!-- <span>
+    <span>Stream: <strong>{{pageName}}</strong></span>
+    <span class="filler"></span>
+    <!-- <span>
         <button mat-fab (click)="addJsonObject()" mat-tooltip="Aggiungi una struttura" tooltip-position="below">
           <mat-icon>add</mat-icon>
         </button>
       </span> -->
-    </mat-toolbar>
+  </mat-toolbar>
 
   <div class="editor-view">
-        <json-editor
-        [options]="editorOptions"
-        [data]="jsonObject"
-        (change)="getData($event)">
-      </json-editor>
+    <json-editor [options]="editorOptions" [data]="jsonObject" (change)="getData($event)">
+    </json-editor>
+  </div>
+  <div class="editor-view">
+    <json-editor [options]="editorOptions2" [data]="jsonObject" (change)="getData($event)">
+    </json-editor>
   </div>
 
 </mat-card>
