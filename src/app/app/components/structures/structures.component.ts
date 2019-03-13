@@ -24,7 +24,7 @@ export class StructuresComponent implements OnInit {
   project: any = {};
 
   public editorOptions: JsonEditorOptions;
-  public data: any;
+  public editorOptions2: JsonEditorOptions;
 
   loading: boolean = false;
 
@@ -46,6 +46,9 @@ export class StructuresComponent implements OnInit {
     this.editorOptions = new JsonEditorOptions();
     this.editorOptions.modes = ['code', 'text', 'tree', 'view']; // set all allowed modes
     this.editorOptions.mode = 'code';                            // set only one mode
+    this.editorOptions2 = new JsonEditorOptions();
+    this.editorOptions2.modes = ['code', 'text', 'tree', 'view']; // set all allowed modes
+    this.editorOptions2.mode = 'tree';                            // set only one mode
     // console.log(this.editorOptions);
   }
 
