@@ -103,8 +103,8 @@ export class FirebaseService {
     return this.firestore.doc('jsons/' + json.id).update(json);
   }
 
-  delateJson(json): any {
-    return this.firestore.doc('jsons/' + json.id).delete();
+  delateJson(jsonId): any {
+    return this.firestore.doc('jsons/' + jsonId).delete();
   }
 
   getJson(jsonId): any {

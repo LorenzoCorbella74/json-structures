@@ -70,7 +70,7 @@ export class StructuresComponent implements OnInit {
           this.loading = false;
           if (doc.exists) {
             this.project = doc.data();
-            // console.log(this.project);
+            console.log(this.project);
             this.selectedIndex = this.project.streams.findIndex(e => e.id === this.streamId);
             // se esiste si prende quello ritornato
             const index = this.project.streams[this.selectedIndex].refId;

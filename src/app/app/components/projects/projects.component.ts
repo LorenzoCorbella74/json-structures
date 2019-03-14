@@ -36,12 +36,10 @@ export class ProjectsComponent implements OnInit {
 
   ngOnInit() {
     this.user = this.mem.get('user');
-    this.projects = this.mem.get('projects');
     this.selectedProject = this.mem.get('selectedProject');
-    if (this.user && !this.projects && !this.selectedProject) {
+    console.log('Selected projects: ', this.selectedProject)
+    if (this.user) {
       this.loadProjects(this.user.uid);         // carica i progetti dell'utente
-    } else {
-      this.loadStreams(this.selectedProject.id);
     }
   }
 
@@ -61,7 +59,10 @@ export class ProjectsComponent implements OnInit {
           };
         }
       });
-      this.mem.set('projects', this.projects);
+      if (this.selectedProject) {
+        this.loadStreams(this.selectedProject.id);
+      }
+      console.log('Progetti: ', this.projects);
     },
       error => console.log(error));
   }
@@ -92,6 +93,7 @@ export class ProjectsComponent implements OnInit {
         this.firebase.updateProject(obj.id, result)
           .then(data => {
             obj = result;
+            this.mem.set('selectedProject', this.selectedProject);
           })
           .catch(error => console.log('Impossibile aggiornare un progetto: ', error));
       }
@@ -99,9 +101,19 @@ export class ProjectsComponent implements OnInit {
   }
 
   deleteProject(proj: any) {
+    const streamsTobeErased = proj.streams.map(e => e.refId);
     this.firebase.delateProject(proj.id)
       .then(data => {
+        console.log('Cancellato progetto');
         this.projects = this.projects.filter(e => e.id !== proj.id);
+        this.streams = [];
+        // si cancella tutti gli streams associati a quel progetto
+        streamsTobeErased.forEach(id => {
+          this.firebase.delateJson(id).then( () => {
+            console.log('Cancellato stream json');
+          })
+          .catch(error => console.log('Impossibile cancellare uno stream json: ', error));
+        });
       })
       .catch(error => console.log('Impossibile cancellare un progetto: ', error));
   }
@@ -118,7 +130,8 @@ export class ProjectsComponent implements OnInit {
         console.log('Modale aggiungi: ', result);
         this.firebase.createProject(result)
           .then(data => {
-            this.projects.push(data);
+            // result = Object.assign(result, { id: data.id });
+            // this.projects.push(result);
           })
           .catch(error => console.log('Impossibile creare un progetto: ', error));
       }
@@ -139,6 +152,7 @@ export class ProjectsComponent implements OnInit {
         this.firebase.updateProject(this.selectedProject.id, this.selectedProject)
           .then(data => {
             this.table.renderRows();
+            this.mem.set('selectedProject', this.selectedProject);
           })
           .catch(error => console.log('Impossibile aggiornare un progetto: ', error));
       }
@@ -159,6 +173,7 @@ export class ProjectsComponent implements OnInit {
         this.firebase.updateProject(this.selectedProject.id, this.selectedProject)
           .then(data => {
             this.table.renderRows();
+            this.mem.set('selectedProject', this.selectedProject);
           })
           .catch(error => console.log('Impossibile aggiornare un progetto: ', error));
       }
@@ -167,10 +182,17 @@ export class ProjectsComponent implements OnInit {
 
   deleteStream(stream: any) {
     const theOne = this.selectedProject.streams.find(e => stream.name === e.name);
-    this.selectedProject.streams.splice(theOne, 1);
+    const deleted = this.selectedProject.streams.splice(theOne, 1);
     this.firebase.updateProject(this.selectedProject.id, this.selectedProject)
       .then(data => {
         this.table.renderRows();
+        // si deve cancellare anche lo stream associato
+        this.firebase.delateJson(deleted.id)
+          .then(data => {
+            console.log('Cancellato stream json: ', data);
+            this.mem.set('selectedProject', this.selectedProject);
+          })
+          .catch(error => console.log('Impossibile cancellare uno stream json: ', error));
       })
       .catch(error => console.log('Impossibile aggiornare un progetto: ', error));
   }
