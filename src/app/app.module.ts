@@ -52,7 +52,7 @@ export function createStorage() {
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    AngularFireModule.initializeApp(environment.firebaseConfig), // https://github.com/angular/angularfire2/issues/1635#issuecomment-389568397
+    AngularFireModule.initializeApp(environment.firebaseConfig), 
     AngularFireDatabaseModule,
     HttpClientModule,
     MaterialModule,
@@ -74,3 +74,9 @@ export function createStorage() {
   bootstrap: [AppComponent]
 })
 export class AppModule {}
+
+/*
+
+// https://github.com/angular/angularfire2/issues/1635#issuecomment-389568397
+
+*/
