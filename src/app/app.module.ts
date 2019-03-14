@@ -18,23 +18,23 @@ import { SpinnerComponent } from "./app/components/spinner/spinner.component";
 import { AddDialogueComponent } from "./app/components/add-dialogue/add-dialogue.component";
 import { ProjectsComponent } from "./app/components/projects/projects.component";
 import { StructuresComponent } from "./app/components/structures/structures.component";
-import { LoginComponent } from './app/components/login/login.component';
-import { StreamDialogueComponent } from './app/components/stream-dialogue/stream-dialogue.component';
+import { LoginComponent } from "./app/components/login/login.component";
+import { StreamDialogueComponent } from "./app/components/stream-dialogue/stream-dialogue.component";
 
 // SERVICES
-import { LocalStorageService } from './app/services/locastorage.service';
-import { AuthenticateService } from './app/services/authenticate.service';
-import { CanActivateRouteGuard } from './app/services/can-activate-route.guard';
+import { LocalStorageService } from "./app/services/locastorage.service";
+import { AuthenticateService } from "./app/services/authenticate.service";
+import { CanActivateRouteGuard } from "./app/services/can-activate-route.guard";
 
-// FIREBASE
-import { AngularFireModule } from '@angular/fire';
-import { AngularFireDatabaseModule } from '@angular/fire/database';
-import { AngularFireAuth } from '@angular/fire/auth';
+import { AngularFireModule } from "@angular/fire";
+import { AngularFireDatabaseModule } from "@angular/fire/database";
+import { environment } from "../environments/environment";
+import { AngularFireAuth } from "@angular/fire/auth";
 import { FirebaseService } from './app/services/firebase.service';
 import { AngularFirestore } from '@angular/fire/firestore';
 
 export function createStorage() {
-  return new LocalStorageService('str', 'sessionStorage');
+  return new LocalStorageService("str", "sessionStorage");
 }
 
 @NgModule({
@@ -52,16 +52,7 @@ export function createStorage() {
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    AngularFireModule.initializeApp({
-      firebaseConfig: {
-        apiKey: 'AIzaSyCQGgZpEhJgNTb0cvk7z6lf7lBCjZKMzl8',
-        authDomain: 'json-structures.firebaseapp.com',
-        databaseURL: 'https://json-structures.firebaseio.com',
-        projectId: 'json-structures',
-        storageBucket: '',
-        messagingSenderId: '1078689315964'
-      }
-    }),
+    AngularFireModule.initializeApp(environment.firebaseConfig), // https://github.com/angular/angularfire2/issues/1635#issuecomment-389568397
     AngularFireDatabaseModule,
     HttpClientModule,
     MaterialModule,

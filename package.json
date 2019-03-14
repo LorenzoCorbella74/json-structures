@@ -1,6 +1,7 @@
 {
   "name": "json-structures",
   "version": "1.0.0",
+  "author": "Lorenzo Corbella",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
