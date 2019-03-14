@@ -79,4 +79,6 @@ export class AppModule {}
 
 // https://github.com/angular/angularfire2/issues/1635#issuecomment-389568397
 
+Con ng build --prod --aot=false --build-optimizer=false NON FUNZIONA!!
+
 */
