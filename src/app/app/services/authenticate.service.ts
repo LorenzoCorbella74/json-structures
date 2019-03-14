@@ -59,6 +59,6 @@ export class AuthenticateService {
 
   isLoggedIn() {
     const user = this.mem.get('user');
-    return user.uid ? true : false;
+    return user && user.uid ? true : false;
   }
 }
